@@ -10,6 +10,8 @@ typedef struct aln {
 	char	RGM[50];
 } Aluno;
 
+	char	acessar[50];
+
 typedef struct turma {
 	Aluno	alunos[MAX];
 	int	ultimo_aluno;
@@ -136,6 +138,20 @@ int	main() {
 	}
 	
 	mostrar(&myLista);
+
+	//Acessar aluno pelo RGM.
+	printf("Digite o RGM do aluno que deseja acessar:\n");
+	gets(acessar);
+	
+	int mostrar = getPosicao(&myLista, acessar);
+	
+	if (mostrar == -1) {
+		printf("não existe.\n");
+	}
+	else {
+		printf("Nome: %s\n", myLista.alunos[mostrar].nome);
+		printf("RGM: %s\n", myLista.alunos[mostrar].RGM);
+	}
 	
 	getchar();
 }
