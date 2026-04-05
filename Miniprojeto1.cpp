@@ -208,6 +208,8 @@ int	main() {
 		
 		switch(op) {
 			case 1:
+				getchar();
+				
 				printf("Nome:");
 				gets(alu.nome);
 				printf("RGM:");
@@ -228,6 +230,8 @@ int	main() {
 			/* CORRECAO: bloco com chaves para permitir declaracao de variavel local,
 			   e renomeada para 'posEncontrado' para nao conflitar com a funcao mostrar() */
 			case 3: {
+				getchar();
+				
 				printf("Digite o RGM do aluno que deseja acessar:\n");
 				gets(acessar);
 				
@@ -243,6 +247,8 @@ int	main() {
 			}
 				
 			case 4:
+				getchar();
+				
 				printf("Digite o RGM para remover:\n");
 				gets(acessar);
 				remover(&myLista, acessar);
