@@ -5,9 +5,17 @@
 
 #define MAX 60
 
+typedef struct disc {
+	char nome[50];
+	struct disc* prox;
+} Disciplina;
+
+	char nomedisciplina[50];
+
 typedef struct aln {
 	char	nome[50];
 	char	RGM[50];
+	Disciplina* disciplinas;
 } Aluno;
 
 	char	acessar[50];
@@ -113,18 +121,16 @@ void	mostrar(Lista * turma){
 	}
 }
 
-typedef struct disc {
-	char nome[50];
-	struct disc* prox;
-} Disciplina;
-
 int menu() {
 	int op;
 	printf("\n=== MENU ===\n");
-	printf("1 - Cadastrar\n");
-	printf("2 - Mostrar\n");
-	printf("3 - Buscar\n");
-	printf("4 - Remover\n");
+	printf("1 - Cadastrar Aluno\n");
+	printf("2 - Adicionar Disciplina\n");
+	printf("3 - Mostrar Disciplinas\n");
+	printf("4 - Matricular\n");
+	printf("5 - Mostrar Alunos\n");
+	printf("6 - Buscar Aluno\n");
+	printf("7 - Remover Aluno\n");
 	printf("0 - Sair\n");
 	printf("Opção: ");
 	scanf("%d", &op);
@@ -197,39 +203,95 @@ int	main() {
 	Aluno alu;
 	int pos = 0;
 	char resp = 's';
-	int op; /* CORRECAO: declarado fora do do-while para ser visivel na condicao */
+	int op;
+	
+	Disciplina* listaDisciplinas = NULL;
 	
 	myLista = criar();
 	
-	printf("=== SISTEMA DE GESTAO DE ALUNOS ===\n");
+	printf("=== SISTEMA DE GESTAO DE ALUNOS E DISCIPLINAS ===\n");
 	
 	do {
 		op = menu();
 		
 		switch(op) {
 			case 1:
-				getchar();
-				
-				printf("Nome:");
-				gets(alu.nome);
-				printf("RGM:");
-				gets(alu.RGM);
+				do {
+					getchar();
+					
+					printf("Nome:");
+					gets(alu.nome);
+					printf("RGM:");
+					gets(alu.RGM);
+	
+					alu.disciplinas = NULL;
+	
+					inserirOrdenada(&myLista, alu);
+					pos++;
 
-				inserirOrdenada(&myLista, alu);
-				pos++;
+					printf("Deseja continuar s/n\n");
+					resp = getchar();
+					
+				} while (resp == 's');
 				
-				printf("Deseja continuar s/n\n");
-				resp = getchar();
-				fflush(stdin);
 				break;
-				
+
 			case 2:
+				do {
+					getchar();
+					
+					printf("Digite o nome da disciplina que deseja adicionar:\n");
+					gets (nomedisciplina);
+					
+					adicionarDisciplina(&listaDisciplinas, nomedisciplina);
+					pos++;
+					
+					printf("Deseja continuar s/n\n");
+					resp = getchar();
+					
+				} while (resp == 's');
+			
+				break;
+
+			case 3:
+				mostrarDisciplinas(listaDisciplinas);
+				break;
+
+			case 4: {
+			    getchar();
+			
+			    printf("Digite o RGM do aluno que deseja matricular em uma disciplina:\n");
+			    gets(acessar);
+			
+			    int posEncontrado = getPosicao(&myLista, acessar);
+			
+			    if (posEncontrado == -1) {
+			        printf("Aluno não encontrado!\n");
+			    } else {
+			    	do {
+				        printf("Disciplinas:\n");
+				        mostrarDisciplinas(listaDisciplinas);
+				
+				        printf("Digite o nome da disciplina:\n");
+				        gets(nomedisciplina);
+				
+				        adicionarDisciplina (&myLista.alunos[posEncontrado].disciplinas,nomedisciplina);
+				        
+				        printf("Deseja adicionar outra disciplina? s/n\n");
+            			resp = getchar();
+            			getchar();
+            			
+					} while (resp == 's');
+			    }
+			
+			    break;
+			}
+			
+			case 5:
 				mostrar(&myLista);
 				break;
 				
-			/* CORRECAO: bloco com chaves para permitir declaracao de variavel local,
-			   e renomeada para 'posEncontrado' para nao conflitar com a funcao mostrar() */
-			case 3: {
+			case 6: {
 				getchar();
 				
 				printf("Digite o RGM do aluno que deseja acessar:\n");
@@ -242,11 +304,13 @@ int	main() {
 				} else {
 					printf("Nome: %s\n", myLista.alunos[posEncontrado].nome);
 					printf("RGM: %s\n", myLista.alunos[posEncontrado].RGM);
+					printf("Disciplinas: ");
+					mostrarDisciplinas(myLista.alunos[posEncontrado].disciplinas);
 				}
 				break;
 			}
 				
-			case 4:
+			case 7:
 				getchar();
 				
 				printf("Digite o RGM para remover:\n");
